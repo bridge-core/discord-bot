@@ -23,7 +23,6 @@ client.on('messageCreate', async message => {
     console.log(message.content)
 
     if (!message.inGuild) return
-    if (message.author.id !== '495583029708718081') return
 
     console.log(`Message from user ${message.author.displayName} | ${getTrust(message.author)}`)
 

@@ -20,11 +20,7 @@ client.on('ready', () => {
 })
 
 client.on('messageCreate', async message => {
-    console.log(message.content)
-
     if (!message.inGuild) return
-
-    console.log(`Message from user ${message.author.displayName} | ${getTrust(message.author)}`)
 
     if (await moderateMessage(client, message)) return
 

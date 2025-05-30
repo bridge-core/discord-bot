@@ -16,7 +16,7 @@ export async function moderateMessage(client: Client, message: Message): Promise
 
     const containsLink = message.content.includes('http://') || message.content.includes('https://')
 
-    if (containsLink && (userTrust === TrustLevel.None || userTrust === TrustLevel.Low)) {
+    if (containsLink && userTrust === TrustLevel.None) {
         await message.delete()
 
         message.author.send(

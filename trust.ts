@@ -65,7 +65,28 @@ export async function portTrust(client: Client) {
     console.log('Porting trust!')
 
     const guild = await client.guilds.fetch(GUILD_ID)
-    // guild.members.
+    for (const [id, member] of guild.members.cache) {
+        data[id] = {
+            trust: TrustLevel.Medium,
+            trustProgress: mediumTrustThreshold,
+        }
+
+        if (
+            member.roles.cache.has('668543369110224904') ||
+            member.roles.cache.has('602097954282668032') ||
+            member.roles.cache.has('670384124615196674') ||
+            member.roles.cache.has('602098047769378846')
+        ) {
+            data[id] = {
+                trust: TrustLevel.High,
+                trustProgress: highTrustThreshold,
+            }
+
+            console.log(`High trust member ${member.displayName}`)
+        }
+    }
+
+    requestDataUpdate()
 }
 
 function requestDataUpdate() {

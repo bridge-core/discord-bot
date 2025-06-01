@@ -3,7 +3,8 @@
   "specifiers": {
     "jsr:@std/fs@*": "1.0.17",
     "npm:@types/node@*": "22.15.15",
-    "npm:discord.js@*": "14.19.3"
+    "npm:discord.js@*": "14.19.3",
+    "npm:discord.js@^14.19.3": "14.19.3"
   },
   "jsr": {
     "@std/fs@1.0.17": {
@@ -142,5 +143,10 @@
     "ws@8.18.2": {
       "integrity": "sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ=="
     }
+  },
+  "workspace": {
+    "dependencies": [
+      "npm:discord.js@^14.19.3"
+    ]
   }
 }

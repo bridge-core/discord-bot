@@ -7,15 +7,15 @@ const mediumTrustThreshold = 20
 const highTrustThreshold = 100
 
 export enum TrustLevel {
-    None = 'none',
-    Low = 'low',
-    Medium = 'medium',
-    High = 'high',
+	None = 'none',
+	Low = 'low',
+	Medium = 'medium',
+	High = 'high',
 }
 
 type UserData = {
-    trust: TrustLevel
-    trustProgress: number
+	trust: TrustLevel
+	trustProgress: number
 }
 
 const trustDbPath = 'trust.db.json'
@@ -25,86 +25,94 @@ const data: Record<string, UserData> = JSON.parse(Deno.readTextFileSync(trustDbP
 let dataUpdateRequested: boolean = false
 
 export function getTrust(user: User): TrustLevel {
-    const userData: undefined | UserData = data[user.id]
+	const userData: undefined | UserData = data[user.id]
 
-    if (!userData) return TrustLevel.None
+	if (!userData) return TrustLevel.None
 
-    return data[user.id].trust
+	return data[user.id].trust
 }
 
 export function updateTrust(user: User, amount: number) {
-    if (!data[user.id]) {
-        data[user.id] = {
-            trust: TrustLevel.None,
-            trustProgress: amount,
-        }
-    } else {
-        data[user.id].trustProgress += amount
-    }
+	if (!data[user.id]) {
+		data[user.id] = {
+			trust: TrustLevel.None,
+			trustProgress: amount,
+		}
+	} else {
+		data[user.id].trustProgress += amount
+	}
 
-    if (data[user.id].trustProgress >= lowTrustThreshold && data[user.id].trust === TrustLevel.None) {
-        data[user.id].trust = TrustLevel.Low
+	if (data[user.id].trustProgress >= lowTrustThreshold && data[user.id].trust === TrustLevel.None) {
+		data[user.id].trust = TrustLevel.Low
 
-        user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
-    }
+		try {
+			user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
+		} catch {}
+	}
 
-    if (data[user.id].trustProgress >= mediumTrustThreshold && data[user.id].trust === TrustLevel.Low) {
-        data[user.id].trust = TrustLevel.Medium
-        user.send('Thank you for being active in the bridge. server! Your trust level has been increased. You may now send links.')
-    }
+	if (data[user.id].trustProgress >= mediumTrustThreshold && data[user.id].trust === TrustLevel.Low) {
+		data[user.id].trust = TrustLevel.Medium
 
-    if (data[user.id].trustProgress >= highTrustThreshold && data[user.id].trust === TrustLevel.Medium) {
-        data[user.id].trust = TrustLevel.High
-        user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
-    }
+		try {
+			user.send('Thank you for being active in the bridge. server! Your trust level has been increased. You may now send links.')
+		} catch {}
+	}
 
-    requestDataUpdate()
+	if (data[user.id].trustProgress >= highTrustThreshold && data[user.id].trust === TrustLevel.Medium) {
+		data[user.id].trust = TrustLevel.High
+
+		try {
+			user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
+		} catch {}
+	}
+
+	requestDataUpdate()
 }
 
 export async function portTrust(client: Client) {
-    console.log('Porting trust!')
+	console.log('Porting trust!')
 
-    const guild = await client.guilds.fetch(GUILD_ID)
-    for (const [id, member] of guild.members.cache) {
-        data[id] = {
-            trust: TrustLevel.Medium,
-            trustProgress: mediumTrustThreshold,
-        }
+	const guild = await client.guilds.fetch(GUILD_ID)
+	for (const [id, member] of guild.members.cache) {
+		data[id] = {
+			trust: TrustLevel.Medium,
+			trustProgress: mediumTrustThreshold,
+		}
 
-        if (
-            member.roles.cache.has('668543369110224904') ||
-            member.roles.cache.has('602097954282668032') ||
-            member.roles.cache.has('670384124615196674') ||
-            member.roles.cache.has('602098047769378846')
-        ) {
-            data[id] = {
-                trust: TrustLevel.High,
-                trustProgress: highTrustThreshold,
-            }
+		if (
+			member.roles.cache.has('668543369110224904') ||
+			member.roles.cache.has('602097954282668032') ||
+			member.roles.cache.has('670384124615196674') ||
+			member.roles.cache.has('602098047769378846')
+		) {
+			data[id] = {
+				trust: TrustLevel.High,
+				trustProgress: highTrustThreshold,
+			}
 
-            console.log(`High trust member ${member.displayName}`)
-        }
-    }
+			console.log(`High trust member ${member.displayName}`)
+		}
+	}
 
-    requestDataUpdate()
+	requestDataUpdate()
 }
 
 function requestDataUpdate() {
-    dataUpdateRequested = true
+	dataUpdateRequested = true
 }
 
 async function updateLoop() {
-    while (true) {
-        await new Promise(res => setTimeout(res, 1000))
+	while (true) {
+		await new Promise(res => setTimeout(res, 1000))
 
-        if (dataUpdateRequested) {
-            console.log('Updated data!')
+		if (dataUpdateRequested) {
+			console.log('Updated data!')
 
-            await Deno.writeTextFile(trustDbPath, JSON.stringify(data))
+			await Deno.writeTextFile(trustDbPath, JSON.stringify(data))
 
-            dataUpdateRequested = false
-        }
-    }
+			dataUpdateRequested = false
+		}
+	}
 }
 
 updateLoop()

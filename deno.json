@@ -1,5 +1,6 @@
 {
     "tasks": {
-        "dev": "deno run -A --env-file --watch main.ts"
+        "dev": "deno run -A --env-file --watch main.ts",
+        "run": "deno run -A --env-file main.ts"
     }
 }

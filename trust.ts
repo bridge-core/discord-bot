@@ -32,7 +32,7 @@ export function getTrust(user: User): TrustLevel {
 	return data[user.id].trust
 }
 
-export function updateTrust(user: User, amount: number) {
+export async function updateTrust(user: User, amount: number) {
 	if (!data[user.id]) {
 		data[user.id] = {
 			trust: TrustLevel.None,
@@ -46,7 +46,7 @@ export function updateTrust(user: User, amount: number) {
 		data[user.id].trust = TrustLevel.Low
 
 		try {
-			user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
+			await user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
 		} catch {}
 	}
 
@@ -54,7 +54,7 @@ export function updateTrust(user: User, amount: number) {
 		data[user.id].trust = TrustLevel.Medium
 
 		try {
-			user.send('Thank you for being active in the bridge. server! Your trust level has been increased. You may now send links.')
+			await user.send('Thank you for being active in the bridge. server! Your trust level has been increased. You may now send links.')
 		} catch {}
 	}
 
@@ -62,7 +62,7 @@ export function updateTrust(user: User, amount: number) {
 		data[user.id].trust = TrustLevel.High
 
 		try {
-			user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
+			await user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
 		} catch {}
 	}
 

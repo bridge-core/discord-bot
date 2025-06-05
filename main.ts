@@ -19,7 +19,7 @@ client.on('messageCreate', async message => {
 
 		if (await moderateMessage(client, message)) return
 
-		updateTrust(message.author, 1)
+		await updateTrust(message.author, 1)
 	} catch (error) {
 		console.warn(`Error on message create!`)
 		console.error(error)

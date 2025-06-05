@@ -1,6 +1,7 @@
 import { Client, GuildTextBasedChannel, Message } from 'npm:discord.js'
 import { getTrust, TrustLevel } from './trust.ts'
 import { GUILD_ID, MOD_CHANNEL_ID } from './env.ts'
+import { link } from 'node:fs'
 
 export async function getModChannel(client: Client): Promise<GuildTextBasedChannel> {
 	const guild = await client.guilds.fetch(GUILD_ID)
@@ -15,8 +16,9 @@ export async function moderateMessage(client: Client, message: Message): Promise
 	const userTrust = getTrust(message.author)
 
 	const containsLink = message.content.includes('http://') || message.content.includes('https://')
+	const linkIsBridge = message.content.includes('https://editor.bridge-core.app')
 
-	if (containsLink && userTrust === TrustLevel.None) {
+	if (containsLink && !linkIsBridge && userTrust === TrustLevel.None) {
 		await message.delete()
 
 		try {

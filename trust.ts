@@ -46,6 +46,7 @@ export async function updateTrust(user: User, amount: number) {
 		data[user.id].trust = TrustLevel.Low
 
 		try {
+			console.log(`Trust updated to Low for ${user.globalName}`)
 			await user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
 		} catch {}
 	}
@@ -54,6 +55,7 @@ export async function updateTrust(user: User, amount: number) {
 		data[user.id].trust = TrustLevel.Medium
 
 		try {
+			console.log(`Trust updated to Medium for ${user.globalName}`)
 			await user.send('Thank you for being active in the bridge. server! Your trust level has been increased. You may now send links.')
 		} catch {}
 	}
@@ -62,6 +64,7 @@ export async function updateTrust(user: User, amount: number) {
 		data[user.id].trust = TrustLevel.High
 
 		try {
+			console.log(`Trust updated to High for ${user.globalName}`)
 			await user.send('Thank you for being active in the bridge. server! Your trust level has been increased.')
 		} catch {}
 	}
@@ -106,7 +109,7 @@ async function updateLoop() {
 		await new Promise(res => setTimeout(res, 1000))
 
 		if (dataUpdateRequested) {
-			console.log('Updated data!')
+			// console.log('Updated data!')
 
 			await Deno.writeTextFile(trustDbPath, JSON.stringify(data))
 

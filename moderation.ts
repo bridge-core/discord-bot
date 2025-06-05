@@ -22,6 +22,8 @@ export async function moderateMessage(client: Client, message: Message): Promise
 		await message.delete()
 
 		try {
+			console.log(`Moderated message from ${message.author.globalName}`)
+
 			await message.author.send(
 				"Hello, I'm from the bridge. discord server and my job is to help protect you from bots and scams. It looks like you tried sending a message with a link, however you have not been active enough in the server yet to gain enough trust. I have removed your message and notified the moderation team. If this was an accident, do not worry. Our team will decide if any action is necessary."
 			)
